@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>vectorgram.ai — Image to Vector Converter · SVG, EPS, DXF, PDF</title>
+  <meta name="description" content="Vectorgram turns raster images — photos, logos, and AI-generated artwork — into clean, editable SVG, EPS, DXF and PDF vectors. Launching soon." />
+  <meta name="keywords" content="image to vector, png to svg, raster to vector converter, vectorize ai art, ai image to svg, svg converter, eps converter, dxf converter, vectorize logo" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://vectorgram.ai/" />
+  <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="32x32" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="vectorgram.ai — Pixels in. Perfect curves out." />
+  <meta property="og:description" content="Vectorgram turns raster images — photos, logos, and AI-generated artwork — into clean, editable SVG, EPS, DXF and PDF vectors. Launching soon." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://vectorgram.ai/" />
+  <meta property="og:site_name" content="vectorgram.ai" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="vectorgram.ai — Pixels in. Perfect curves out." />
+  <meta name="twitter:description" content="Raster images in — clean, editable SVG, EPS, DXF and PDF vectors out. Launching soon." />
+
+  <!-- Structured data for search engines and AI crawlers -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://vectorgram.ai/#org",
+        "name": "Vectorgram",
+        "url": "https://vectorgram.ai/"
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://vectorgram.ai/#site",
+        "name": "vectorgram.ai",
+        "url": "https://vectorgram.ai/",
+        "publisher": { "@id": "https://vectorgram.ai/#org" }
+      },
+      {
+        "@type": "WebApplication",
+        "@id": "https://vectorgram.ai/#app",
+        "name": "Vectorgram",
+        "url": "https://vectorgram.ai/",
+        "applicationCategory": "DesignApplication",
+        "operatingSystem": "Web browser",
+        "description": "Vectorgram converts raster images into clean, editable vector graphics. It redraws photos, logos, sketches, and AI-generated artwork from image generators such as Midjourney, DALL·E, and Stable Diffusion as true vector paths, and exports SVG, EPS, DXF, and PDF for print, cutting machines, and CAD.",
+        "featureList": [
+          "PNG, JPG and WebP to SVG conversion",
+          "Vectorization of AI-generated images",
+          "Logo and lettering vectorization with editable anchor points",
+          "Cut-ready paths for Cricut, laser cutters and CNC",
+          "EPS, DXF and PDF export"
+        ],
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "description": "Free conversions included at launch"
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Same three typefaces as the app: Fraunces (display), Inter (body), JetBrains Mono (labels) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..500;1,9..144,300..500&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --paper: #F7F4EC;
+      --panel: #EFEAE0;
+      --ink: #1B1813;
+      --ink-soft: #6E6759;
+      --accent: #C2401A;
+      --accent-hover: #9E3312;
+      --line: #DDD6C7;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+    body {
+      min-height: 100vh;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Inter", system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+    }
+
+    ::selection { background: var(--accent); color: var(--paper); }
+
+    /* subtle drafting dot-grid, exactly like the app's .dot-grid */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: radial-gradient(circle, #C9C1AE 0.8px, transparent 0.8px);
+      background-size: 24px 24px;
+      opacity: 0.5;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      width: 100%;
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---- header ---- */
+    header { display: flex; align-items: center; gap: 0.75rem; padding-top: 0.5rem; }
+    .logo-mark {
+      position: relative;
+      display: inline-flex;
+      width: 1.75rem;
+      height: 1.75rem;
+      align-items: center;
+      justify-content: center;
+      background: var(--ink);
+      border-radius: 2px;
+    }
+    .wordmark {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 500;
+      font-size: 1.375rem;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+    }
+    .wordmark .tld {
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 400;
+      font-size: 0.52em;
+      letter-spacing: 0.06em;
+      color: var(--accent, #C2401A);
+    }
+
+    /* ---- mono annotation label ---- */
+    .mono-label {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--ink-soft);
+    }
+
+    .kicker { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+    .kicker .rule { height: 1px; width: 2.5rem; background: var(--ink); }
+    .kicker .mono-label { color: var(--ink); }
+
+    /* ---- hero ---- */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3rem 0;
+      max-width: 40rem;
+      animation: fade-in 400ms ease-out both;
+    }
+
+    h1 {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 500;
+      line-height: 1.02;
+      letter-spacing: -0.01em;
+      font-size: clamp(2.75rem, 8vw, 4.4rem);
+    }
+    h1 em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--accent);
+    }
+
+    .lede {
+      margin-top: 2rem;
+      max-width: 30rem;
+      font-size: 1.125rem;
+      line-height: 1.6;
+      color: var(--ink-soft);
+    }
+    .lede-2 { margin-top: 1rem; font-size: 1rem; }
+
+    .actions {
+      margin-top: 2.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.625rem;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 13px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.875rem 1.75rem;
+      border-radius: 2px;
+      background: var(--ink);
+      color: var(--paper);
+      text-decoration: none;
+      transition: background-color 200ms, color 200ms;
+    }
+    .btn-primary:hover { background: var(--accent); color: var(--paper); }
+
+    .note {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--ink-soft);
+    }
+
+    /* ---- spec footnotes ---- */
+    dl {
+      margin-top: 3.5rem;
+      max-width: 30rem;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      border-top: 1px solid var(--line);
+      padding-top: 1.25rem;
+    }
+    dl .stat { font-family: "Fraunces", Georgia, serif; font-size: 1.5rem; }
+    dl .label {
+      margin-top: 0.25rem;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--ink-soft);
+    }
+
+    /* ---- use cases ---- */
+    .cases {
+      border-top: 1px solid var(--line);
+      padding: 2.5rem 0 3.5rem;
+    }
+    .cases h2 {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 500;
+      font-size: 1.6rem;
+      letter-spacing: -0.01em;
+      margin-bottom: 2rem;
+    }
+    .cases-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.5rem;
+    }
+    .case-index {
+      display: block;
+      margin-bottom: 0.6rem;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+    }
+    .case h3 {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 500;
+      font-size: 1.15rem;
+      margin-bottom: 0.5rem;
+    }
+    .case p {
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: var(--ink-soft);
+    }
+    @media (max-width: 680px) {
+      .cases-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ---- footer ---- */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--line);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.75rem;
+      max-width: 72rem;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ---- registration marks in the corners (⌖) ---- */
+    .reg-mark {
+      position: fixed;
+      z-index: 1;
+      width: 0.75rem;
+      height: 0.75rem;
+      pointer-events: none;
+    }
+    .reg-mark::before, .reg-mark::after { content: ""; position: absolute; background: var(--ink-soft); }
+    .reg-mark::before { left: 50%; top: 0; bottom: 0; width: 1px; }
+    .reg-mark::after { top: 50%; left: 0; right: 0; height: 1px; }
+    .reg-tl { top: 1.25rem; left: 1.25rem; }
+    .reg-tr { top: 1.25rem; right: 1.25rem; }
+    .reg-bl { bottom: 4.5rem; left: 1.25rem; }
+    .reg-br { bottom: 4.5rem; right: 1.25rem; }
+
+    @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) { main { animation: none; } }
+  </style>
+</head>
+<body>
+  <div class="grid-bg" aria-hidden="true"></div>
+  <span class="reg-mark reg-tl" aria-hidden="true"></span>
+  <span class="reg-mark reg-tr" aria-hidden="true"></span>
+  <span class="reg-mark reg-bl" aria-hidden="true"></span>
+  <span class="reg-mark reg-br" aria-hidden="true"></span>
+
+  <div class="wrap">
+    <header>
+      <span class="logo-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="22" height="22" fill="none">
+          <path d="M7.75 6.75L14.5 25C15.5 17 19 10.5 24.5 6.75" stroke="#F7F4EC" stroke-width="1.8" />
+          <rect x="6" y="5" width="3.5" height="3.5" fill="#F7F4EC" />
+          <rect x="12.75" y="23.25" width="3.5" height="3.5" fill="#F7F4EC" />
+          <rect x="22.5" y="4.75" width="4" height="4" fill="#C2401A" />
+        </svg>
+      </span>
+      <span class="wordmark">vectorgram<span class="tld">.ai</span></span>
+    </header>
+
+    <main>
+      <div class="kicker">
+        <span class="rule"></span>
+        <span class="mono-label">Launching soon</span>
+      </div>
+
+      <h1>Pixels in.<br /><em>Perfect curves</em> out.</h1>
+
+      <p class="lede">
+        Vectorgram redraws any image as clean, editable vector geometry — the way a
+        careful draftsman would, in seconds instead of hours.
+      </p>
+
+      <p class="lede lede-2">
+        It&rsquo;s built for the way images get made now. A concept leaves Midjourney
+        or DALL&middot;E as a beautiful grid of pixels; Vectorgram gives it real
+        geometry — sharp, scalable curves that a printer, a plotter, or a brand
+        book will actually accept.
+      </p>
+
+      <div class="actions">
+        <span class="note">SVG · EPS · DXF · PDF</span>
+      </div>
+
+      <dl>
+        <div>
+          <dt class="stat">Seconds</dt>
+          <dd class="label">from pixels to paths</dd>
+        </div>
+        <div>
+          <dt class="stat">80%</dt>
+          <dd class="label">fewer nodes</dd>
+        </div>
+        <div>
+          <dt class="stat">Soon</dt>
+          <dd class="label">public launch</dd>
+        </div>
+      </dl>
+    </main>
+
+    <section class="cases" aria-label="What Vectorgram is for">
+      <h2>Made for the pixel-to-path gap</h2>
+      <div class="cases-grid">
+        <article class="case">
+          <span class="case-index">01</span>
+          <h3>Generated art, production-ready</h3>
+          <p>
+            Image generators are brilliant at ideas and stubbornly raster at
+            delivery. Vectorgram redraws generated logos, icons, and
+            illustrations as true vector paths, so the concept that won the
+            pitch can ship at any size — from a favicon to a storefront.
+          </p>
+        </article>
+        <article class="case">
+          <span class="case-index">02</span>
+          <h3>Logos &amp; lettering, rescued</h3>
+          <p>
+            Turn a low-resolution logo from an old website or a scanned
+            letterhead back into crisp curves with editable anchor points —
+            ready for print, embroidery, or signage.
+          </p>
+        </article>
+        <article class="case">
+          <span class="case-index">03</span>
+          <h3>Paths that machines trust</h3>
+          <p>
+            Closed contours and clean DXF for Cricut, laser cutters, and CNC.
+            No stray nodes, no open paths, no surprises at the cutting table.
+          </p>
+        </article>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <span class="mono-label">© 2026 vectorgram.ai</span>
+    <span class="mono-label">Raster to vector, automated</span>
+  </footer>
+</body>
+</html>
